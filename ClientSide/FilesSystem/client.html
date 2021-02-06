@@ -4,17 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
     <title>Document</title>
   </head>
+
   <body>
-    <form
-      method="POST"
-      action="/"
-      enctype="multipart/form-data"
-      accept-charset=""
-    >
-      <input type="file" name="midFile" multiple />
-      <input type="submit" value="upload" accept=".mid" />
-    </form>
+    <script language="JavaScript">
+      updateList = function () {
+        var input = document.getElementById("customFile");
+        var output = document.getElementById("fileList");
+        var children = "";
+        for (var i = 0; i < input.files.length; ++i) {
+          children += "<li>" + input.files.item(i).name + "</li>";
+        }
+        output.innerHTML = "<ul>" + children + "</ul>";
+      };
+    </script>
+
+    <div class="container mt-3">
+      <div class="custom-file mb-3">
+        <form
+          method="POST"
+          action="/"
+          enctype="multipart/form-data"
+          accept-charset=""
+        >
+          <input
+            type="file"
+            class="custom-file-input"
+            id="customFile"
+            name="midFile"
+            onchange="updateList()"
+            multiple
+          />
+          <label class="custom-file-label" for="customFile">Choose file</label>
+          <input type="submit" value="Upload" accept=".mid" />
+        </form>
+      </div>
+      <form action="/button" method="POST">
+        <input type="submit" value="Home" />
+      </form>
+    </div>
+    <p>Selected files:</p>
+
+    <div id="fileList"></div>
   </body>
 </html>
