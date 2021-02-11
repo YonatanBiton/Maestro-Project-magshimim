@@ -3,6 +3,7 @@ from flask import Flask, request, redirect
 from Models.Learn import learn_from_dataset, generate_output
 
 UPLOAD_FOLDER = 'Server Side\Dataset\\'
+DATASET_PATH = '"Server Side"\Dataset'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -25,6 +26,6 @@ def post_index():
 
 @app.route('/learn', methods=['POST'])
 def post_learn():
-    learn_from_dataset(UPLOAD_FOLDER, 5)
-    generate_output(UPLOAD_FOLDER, 1)
+    learn_from_dataset(DATASET_PATH, 5)
+    generate_output(DATASET_PATH, 1)
     return redirect('/')
