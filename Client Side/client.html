@@ -11,6 +11,19 @@
     />
 
     <title>Document</title>
+    <style>
+      .bord {
+        border-style: solid;
+        border-width: 2px;
+        border-color: #7cfc00;
+        border-spacing: 10px;
+        margin-top: 20px;
+      }
+      .showFiles {
+        color: green;
+        margin-right: 50px;
+      }
+    </style>
   </head>
 
   <body>
@@ -26,8 +39,8 @@
       };
     </script>
 
-    <div class="container mt-3">
-      <div class="custom-file mb-3">
+    <div class="container mt-5">
+      <div class="custom-file mb-4">
         <form
           method="POST"
           action="/"
@@ -43,15 +56,25 @@
             multiple
           />
           <label class="custom-file-label" for="customFile">Choose file</label>
-          <input type="submit" value="Upload" accept=".mid" />
+          <div class="bord">
+            <p style="margin: 40px; color: black">Selected files:</p>
+
+            <div class="showFiles" id="fileList"></div>
+          </div>
+          <div class="container mt-1">
+            <input
+              class="btn btn-success"
+              type="submit"
+              value="Upload"
+              style="width: 1076px"
+              accept=".mid"
+            />
+          </div>
         </form>
       </div>
-      <form action="/button" method="POST">
-        <input type="submit" value="Home" />
-      </form>
     </div>
-    <p>Selected files:</p>
-
-    <div id="fileList"></div>
+    <form action="/button" method="POST">
+      <input type="submit" value="Get Your Music!" />
+    </form>
   </body>
 </html>
