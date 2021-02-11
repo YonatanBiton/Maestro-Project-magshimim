@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, redirect
+from Models.Learn import learn_from_dataset, generate_output
 
 UPLOAD_FOLDER = 'Server Side\Dataset\\'
 
@@ -21,3 +22,9 @@ def post_index():
         filename = midi_file.filename
         midi_file.save(f'{UPLOAD_FOLDER}{filename}')
     return redirect(request.url)
+
+@app.route('/learn', methods=['POST'])
+def post_learn():
+    learn_from_dataset(UPLOAD_FOLDER, 5)
+    generate_output(UPLOAD_FOLDER, 1)
+    return redirect('/')
