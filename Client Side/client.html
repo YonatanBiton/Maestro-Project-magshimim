@@ -28,6 +28,11 @@
 
   <body>
     <script language="JavaScript">
+      function manager() {
+        if (checkFile() == true) {
+          updateList();
+        }
+      }
       updateList = function () {
         var input = document.getElementById("customFile");
         var output = document.getElementById("fileList");
@@ -37,6 +42,22 @@
         }
         output.innerHTML = "<ul>" + children + "</ul>";
       };
+      function checkFile() {
+        var fileElement = document.getElementById("customFile");
+        var fileExtension = "";
+        if (fileElement.value.lastIndexOf(".") > 0) {
+          fileExtension = fileElement.value.substring(
+            fileElement.value.lastIndexOf(".") + 1,
+            fileElement.value.length
+          );
+        }
+        if (fileExtension.toLowerCase() == "mid") {
+          return true;
+        } else {
+          alert("You must select a MID file to upload");
+          return false;
+        }
+      }
     </script>
 
     <div class="container mt-5">
@@ -52,8 +73,9 @@
             class="custom-file-input"
             id="customFile"
             name="midFile"
-            onchange="updateList()"
+            accept=".mid"
             multiple
+            onchange="manager()"
           />
           <label class="custom-file-label" for="customFile">Choose file</label>
           <div class="bord">

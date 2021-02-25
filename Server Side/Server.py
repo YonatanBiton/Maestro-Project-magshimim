@@ -3,9 +3,11 @@ from flask import Flask, request, redirect
 from Models.Learn import learn_from_dataset, generate_output
 
 UPLOAD_FOLDER = 'Server Side\Dataset\\'
+DATASET_PATH = '"Server Side"\Dataset'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/', methods=['GET'])
 def get_index():
@@ -14,6 +16,7 @@ def get_index():
     html_file.close()
     return html_file_content
 
+
 @app.route('/', methods=['POST'])
 def post_index():
     for midi_file in request.files.getlist('midFile'):
@@ -21,6 +24,7 @@ def post_index():
             filename = midi_file.filename
             midi_file.save(f'{UPLOAD_FOLDER}{filename}')
     return redirect(request.url)
+
 
 @app.route('/learn', methods=['POST'])
 def post_learn():
