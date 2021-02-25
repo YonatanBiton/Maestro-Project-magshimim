@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-
+    <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
     <title>Maestro</title>
     <style>
       .bord {
@@ -73,8 +73,10 @@
         </form>
       </div>
     </div>
-    <form action="/learn" method="POST">
-      <input type="submit" value="Get Your Music!" />
-    </form>
+    <div>
+      <midi-visualizer type="piano-roll" id="mainVisualizer" src="@MidiLinkPaste"></midi-visualizer>
+      <midi-player src="@MidiLinkPaste" sound-font visualizer="#mainVisualizer" id="mainPlayer">
+      </midi-player>
+    </div>
   </body>
 </html>
