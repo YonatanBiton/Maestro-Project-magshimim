@@ -109,10 +109,10 @@
         </div>
       </form>
     </div>
-  </div>
-  <form action="/learn" method="POST">
-    <input type="submit" value="Get Your Music!" />
-  </form>
-</body>
-
+    <div>
+      <midi-visualizer type="piano-roll" id="mainVisualizer" src="@MidiLinkPaste"></midi-visualizer>
+      <midi-player src="@MidiLinkPaste" sound-font visualizer="#mainVisualizer" id="mainPlayer">
+      </midi-player>
+    </div>
+  </body>
 </html>
