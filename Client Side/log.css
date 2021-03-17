@@ -3,7 +3,7 @@
     padding: 5%;
     background: white;
     margin-left: 200px;
-    margin-top: 200px;
+    margin-top: 50px;
     box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
 }
 .login-form-2 h3{
@@ -27,7 +27,7 @@
     background-color: #fff;
 }
 .login-form-2 .ForgetPwd{
-    color: #228B22;
+    
     font-weight: 600;
     text-decoration: none;
 }
