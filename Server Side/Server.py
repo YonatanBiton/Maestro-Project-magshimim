@@ -1,4 +1,3 @@
-import os
 from flask import Flask, request, redirect, render_template, session
 from Models.Learn import learn_from_dataset, generate_output
 from Models.Linker import Linker
