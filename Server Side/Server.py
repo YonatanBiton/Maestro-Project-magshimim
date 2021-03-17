@@ -1,20 +1,36 @@
 import os
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template, session
 from Models.Learn import learn_from_dataset, generate_output
+from Models.Linker import Linker
 
 UPLOAD_FOLDER = 'Server Side\Dataset\\'
-DATASET_PATH = '"Server Side"\Dataset'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
 @app.route('/', methods=['GET'])
 def get_index():
-    html_file = open(f'{os.getcwd()}\Client Side\client.html', 'r')
-    html_file_content = html_file.read().replace('@MidiLinkPaste', f'http://127.0.0.1:5000/Dataset/2021-01-25_175809_02.mid')
-    html_file.close()
-    return html_file_content
+    return render_template('client.html', MidiLinkPaste='http://127.0.0.1:5000/Dataset/2021-01-25_175809_02.mid')
+
+
+@app.route('/signup', methods=['GET'])
+def get_register():
+    return render_template('singup.html')
+
+
+@app.route('/login', methods=['GET'])
+def get_login():
+    return render_template('login.html')
+
+
+@app.route('/Dataset/<file_name>', methods=['GET'])
+def get_midi_files(file_name):
+    midi_file = open(f'Dataset/{file_name}', 'rb')
+    midi_file_content = midi_file.read()
+    midi_file.close()
+    return midi_file_content
 
 
 @app.route('/', methods=['POST'])
@@ -31,10 +47,3 @@ def post_learn():
     learn_from_dataset(UPLOAD_FOLDER, 5)
     generate_output(UPLOAD_FOLDER, 1)
     return redirect('/')
-
-@app.route('/Dataset/<file_name>', methods=['GET'])
-def get_midi_files(file_name):
-    midi_file = open(f'{os.getcwd()}\Server Side\Dataset\{file_name}', 'rb')
-    midi_file_content = midi_file.read()
-    midi_file.close()
-    return midi_file_content
