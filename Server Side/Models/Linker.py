@@ -28,7 +28,7 @@ class Linker:
     def login_user(self, user_name, password):
         db_result = self.query("SELECT password FROM users WHERE name=%(user_name)s;",
         {'user_name' : user_name})
-        if len(db_result) == 0 or len(db_result[0]) == 0 or db_result == None:
+        if db_result == None or len(db_result) == 0 or len(db_result[0]) == 0:
             return False
         if db_result[0][0] == password:
             return True
@@ -39,13 +39,13 @@ class Linker:
         rows_affected = self.non_query("INSERT INTO users (name, password, email) "
         "VALUES (\'%(user_name)s\', \'%(password)s\', \'%(email)s\');",
         {'user_name': user_name, 'password': password, 'email' : email})
-        if rows_affected == 0:
+        if rows_affected == None:
             return False
         return True
 
 
     def query(self, message, args={}, error_message="Db query error!"):
-        if self.non_query(message, args, error_message) == 0:
+        if self.non_query(message, args, error_message) == None:
             return None
         return self.__cursor.fetchall()
 
@@ -57,7 +57,7 @@ class Linker:
             self.__cursor.execute(query)
             self.__db.commit()
             print(self.__cursor.rowcount)
-            return self.__cursor.rowcount
+            return self.__cursor.rowcount if self.__cursor.rowcount > 0 else None
         except mysql.connector.Error as mysql_error:
             print (f"{error_message}\nSQL Error: {str(mysql_error)}")
             return None
