@@ -55,13 +55,13 @@
                         <h5 class="card-title text-center">Register</h5>
                         <form class="form-signin" method="POST" action="/signup">
                             <div class="form-label-group">
-                                <input type="text" id="inputUserame" class="form-control" placeholder="Username"
+                                <input type="text" id="inputUserame" name="username" class="form-control" placeholder="Username"
                                     required autofocus>
                                 <label for="inputUserame">Username</label>
                             </div>
 
                             <div class="form-label-group">
-                                <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
+                                <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address"
                                     required>
                                 <label for="inputEmail">Email address</label>
                             </div>
@@ -69,13 +69,13 @@
                             <hr>
 
                             <div class="form-label-group">
-                                <input type="password" id="inputPassword" class="form-control" placeholder="Password"
+                                <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password"
                                     required>
                                 <label for="inputPassword">Password</label>
                             </div>
 
                             <div class="form-label-group">
-                                <input type="password" id="inputConfirmPassword" class="form-control"
+                                <input type="password" id="inputConfirmPassword" name="confirmPassword" class="form-control"
                                     placeholder="Password" required>
                                 <label for="inputConfirmPassword">Confirm password</label>
                             </div>

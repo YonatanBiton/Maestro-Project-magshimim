@@ -2,7 +2,7 @@ import mysql.connector
 
 DB_HOST = "localhost"
 DB_USER = "root"
-DB_PASSWORD = "Ido102956qazwsx"
+DB_PASSWORD = "root"
 DB_NAME = "maestro_db"
 
 class Linker:

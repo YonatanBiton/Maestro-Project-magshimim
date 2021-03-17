@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, redirect, render_template, session
 from Models.Learn import learn_from_dataset, generate_output
 from Models.Linker import Linker
+import Models.Check
 
 UPLOAD_FOLDER = 'Server Side\Dataset\\'
 
@@ -31,6 +32,25 @@ def get_midi_files(file_name):
     midi_file_content = midi_file.read()
     midi_file.close()
     return midi_file_content
+
+
+@app.route('/login', methods=['POST'])
+def post_login():
+    return "test"
+
+
+@app.route('/signup', methods=['POST'])
+def post_signup():
+    required_args = [
+        'username',
+        'password',
+        'email',
+        'confirmPassword'
+    ]
+    if not Models.Check.are_args_in_form(request.form, required_args) or request.form['password'] != request.form['confirmPassword']:
+        return redirect('/signup')
+    Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
+    return redirect('/')
 
 
 @app.route('/', methods=['POST'])
