@@ -1,99 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
-    <title>Maestro</title>
-    <style>
-      .bord {
-        border-style: solid;
-        border-width: 2px;
-        border-color: #7cfc00;
-        border-spacing: 10px;
-        margin-top: 20px;
-      }
-      .showFiles {
-        color: green;
-        margin-right: 50px;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-  <body>
-    <script language="JavaScript">
-      function manager() {
-        if (checkFile() == true) {
-          updateList();
-        }
-      }
-      updateList = function () {
-        var input = document.getElementById("customFile");
-        var output = document.getElementById("fileList");
-        var children = "";
-        for (var i = 0; i < input.files.length; ++i) {
-          children += "<li>" + input.files.item(i).name + "</li>";
-        }
-        output.innerHTML = "<ul>" + children + "</ul>";
-      };
-      function checkFile() {
-        var fileElement = document.getElementById("customFile");
-        var fileExtension = "";
-        if (fileElement.value.lastIndexOf(".") > 0) {
-          fileExtension = fileElement.value.substring(
-            fileElement.value.lastIndexOf(".") + 1,
-            fileElement.value.length
-          );
-        }
-        if (fileExtension.toLowerCase() == "mid") {
-          return true;
-        } else {
-          alert("You must select a MID file to upload");
-          return false;
-        }
-      }
-    </script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
-    <div class="container mt-5">
-      <div class="custom-file mb-4">
-        <form
-          method="POST"
-          action="/"
-          enctype="multipart/form-data"
-          accept-charset=""
-        >
-          <input
-            type="file"
-            class="custom-file-input"
-            id="customFile"
-            name="midFile"
-            accept=".mid"
-            multiple
-            onchange="manager()"
-          />
-          <label class="custom-file-label" for="customFile">Choose file</label>
-          <div class="bord">
-            <p style="margin: 40px; color: black">Selected files:</p>
+  <title>Maestro</title>
+  <style>
+    .bord {
+      border-style: solid;
+      border-width: 2px;
+      border-color: #7cfc00;
+      border-spacing: 10px;
+      margin-top: 20px;
+    }
 
-            <div class="showFiles" id="fileList"></div>
-          </div>
-          <div class="container mt-1">
-            <input
-              class="btn btn-success"
-              type="submit"
-              value="Upload"
-              style="width: 1076px"
-              accept=".mid"
-            />
-          </div>
-        </form>
-      </div>
+    .showFiles {
+      color: green;
+      margin-right: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <script language="JavaScript">
+    function manager() {
+      if (checkFile() == true) {
+        updateList();
+      }
+    }
+    updateList = function () {
+      var input = document.getElementById("customFile");
+      var output = document.getElementById("fileList");
+      var children = "";
+      for (var i = 0; i < input.files.length; ++i) {
+        children += "<li>" + input.files.item(i).name + "</li>";
+      }
+      output.innerHTML = "<ul>" + children + "</ul>";
+    };
+    function checkFile() {
+      var fileElement = document.getElementById("customFile");
+      var fileExtension = "";
+      if (fileElement.value.lastIndexOf(".") > 0) {
+        fileExtension = fileElement.value.substring(
+          fileElement.value.lastIndexOf(".") + 1,
+          fileElement.value.length
+        );
+      }
+      if (fileExtension.toLowerCase() == "mid") {
+        return true;
+      } else {
+        alert("You must select a MID file to upload");
+        return false;
+      }
+    }
+  </script>
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Brand/logo -->
+    <a class="navbar-brand" href="#">
+      <img src="maestro.png" alt="logo" style="height:50px; width: 30px;">
+    </a>
+
+    <!-- Links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="client.html">Maestro</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link 2</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link 3</a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+      <span class="glyphicon glyphicon-user"></span>
+      <li class="nav-item"><a href="singup.html" class="nav-link"> Sign Up</a>
+      </li>
+      <li class="nav-item"><a href="login.html" class="nav-link"> <i class="fa fa-globe"></i>Login</a></li>
+    </ul>
+  </nav>
+
+
+  <div class="container mt-5">
+    <div class="custom-file mb-4">
+      <form method="POST" action="/" enctype="multipart/form-data" accept-charset="">
+        <input type="file" class="custom-file-input" id="customFile" name="midFile" accept=".mid" multiple
+          onchange="manager()" />
+        <label class="custom-file-label" for="customFile">Choose file</label>
+        <div class="bord">
+          <p style="margin: 40px; color: black">Selected files:</p>
+
+          <div class="showFiles" id="fileList"></div>
+        </div>
+        <div class="container mt-1">
+          <input class="btn btn-success" type="submit" value="Upload" style="width: 1076px" accept=".mid" />
+        </div>
+      </form>
     </div>
     <div>
       <midi-visualizer type="piano-roll" id="mainVisualizer" src="@MidiLinkPaste"></midi-visualizer>
