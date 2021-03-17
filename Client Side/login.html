@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>LogIn</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="log.css" />
+</head>
+
+<body style="background-color:#228B22;">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="#">
+            <img src="maestro.png" alt="logo" style="height:50px; width: 30px;">
+        </a>
+
+        <!-- Links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="client.html">Maestro</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link 3</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+
+            <li class="nav-item"><a href="singup.html" class="nav-link"> Sign Up</a>
+            </li>
+            <li class="nav-item"><a href="login.html" class="nav-link"> <i class="fa fa-globe"></i>Login</a></li>
+        </ul>
+    </nav>
+
+
+
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-8 login-form-2">
+                <h3>Login</h3>
+                <form method="POST" action="/login">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Username *" value="" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Your Password *" value="" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-lg btn-success btn-block text-uppercase " value="Login" />
+                    </div>
+                    <div class="form-group">
+
+                        <a href="singup.html" class="ForgetPwd" value="Login">Not Registered Yet? Register Now!</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
