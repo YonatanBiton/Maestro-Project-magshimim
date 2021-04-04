@@ -38,11 +38,13 @@
 
 <body>
   <script language="JavaScript">
-    function manager() {
-      if (checkFile() == true) {
+    //manager function. checks if the files are valid and then updates the list
+    function manager(x) {
+      if (checkFileUploadExt(x) == true) {
         updateList();
       }
     }
+    // this function will update the file list
     updateList = function () {
       var input = document.getElementById("customFile");
       var output = document.getElementById("fileList");
@@ -52,21 +54,27 @@
       }
       output.innerHTML = "<ul>" + children + "</ul>";
     };
-    function checkFile() {
-      var fileElement = document.getElementById("customFile");
-      var fileExtension = "";
-      if (fileElement.value.lastIndexOf(".") > 0) {
-        fileExtension = fileElement.value.substring(
-          fileElement.value.lastIndexOf(".") + 1,
-          fileElement.value.length
-        );
+
+    //This function will check if all of the files that the client inserts are midi files
+    function checkFileUploadExt(fieldObj) {
+      var control = document.getElementById("customFile");
+      var filelength = control.files.length;
+      //checking all the files
+      for (var i = 0; i < control.files.length; i++) {
+        //getting each file information
+        var file = control.files[i];
+        var FileName = file.name;
+        var FileExt = FileName.substr(FileName.lastIndexOf('.') + 1);
+        //checking if extention is mid, if it isent will alert the user that all of the files have to be in midi format
+        if ((FileExt.toLowerCase() != "mid")) {
+          var error = "File type : " + FileExt + "\n\n";
+          error += "Please make sure your file is in midi  format .\n\n";
+          console.error(error);
+          alert("Please make sure your files are in midi format");
+          return false;
+        }
       }
-      if (fileExtension.toLowerCase() == "mid") {
-        return true;
-      } else {
-        alert("You must select a MID file to upload");
-        return false;
-      }
+      return true;
     }
   </script>
 
@@ -104,7 +112,7 @@
     <div class="custom-file mb-4">
       <form method="POST" action="/" enctype="multipart/form-data" accept-charset="">
         <input type="file" class="custom-file-input" id="customFile" name="midFile" accept=".mid" multiple
-          onchange="manager()" />
+          onchange="manager(this)" />
         <label class="custom-file-label" for="customFile">Choose file</label>
         <div class="bord">
           <p style="margin: 40px; color: black">Selected files:</p>
