@@ -1,0 +1,66 @@
+.main-content {
+    /* Prevent overflow on mobile, see https://stackoverflow.com/questions/14270084/overflow-xhidden-doesnt-prevent-content-from-overflowing-in-mobile-browsers */
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  //.page-header {
+   // @include large {
+   //   padding: 3rem 4rem;
+  //  }
+  //}
+  
+  h1.project-name {
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  $instrument-colors: #007bff, #20c997, #dc3545, #6610f2, #ffc107, #e83e8c, #17a2b8, #fd7e14, #28a745;
+  
+  #mainPlayer, #mainVisualizer {
+    display: block;
+    width: inherit;
+    margin: 0;
+  }
+  
+  #mainVisualizer {
+    border-radius: 10px 10px 0 0;
+    border: 1px solid #e9e9e9;
+    border-bottom: none;
+    background: #fefefe;
+  
+    .piano-roll-visualizer {
+      width: inherit;
+      overflow: auto;
+    
+      svg {
+        margin: 2px;
+    
+        rect.note {
+          opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.75);
+    
+          &.active {
+            opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.9);
+            stroke: black;
+            stroke-width: 0.75;
+            stroke-opacity: 0.75;
+          }
+        }
+    
+        @for $i from 0 to 200 {
+          $color: nth($instrument-colors, ($i % length($instrument-colors)) + 1);
+          rect.note[data-instrument="#{$i}"] {
+            fill: darken(saturate($color, 40%), 10%);
+          }
+        }
+      }
+    }
+  }
+  
+  #mainPlayer {
+    &::part(control-panel) {
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #e9e9e9;
+      border-top: none;
+      background: linear-gradient(#fefefe, #e9e9e9);
+    }
+  }
