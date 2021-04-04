@@ -1,7 +1,8 @@
 from flask import Flask, request, redirect, render_template, session
-from Models.Learn import learn_from_dataset, generate_output
+from Models.Learn import learning_thread 
 from Models.Linker import Linker
 import Models.Check
+import threading
 
 UPLOAD_FOLDER = 'Dataset/'
 
@@ -12,7 +13,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route('/', methods=['GET'])
 def get_index():
-    return render_template('client.html', MidiLinkPaste='http://127.0.0.1:5000/Dataset/2021-01-25_175809_02.mid')
+    return render_template('client.html', MidiLinkPaste='http://127.0.0.1:5000/Dataset/bach.mid')
 
 
 @app.route('/signup', methods=['GET'])
@@ -63,6 +64,6 @@ def post_index():
 
 @app.route('/learn', methods=['POST'])
 def post_learn():
-    learn_from_dataset(UPLOAD_FOLDER, 5)
-    generate_output(UPLOAD_FOLDER, 1)
+    learn_thread = threading.Thread(target=learning_thread, args=(UPLOAD_FOLDER, 5, 1)) 
+    learn_thread.start()
     return redirect('/')
