@@ -27,7 +27,7 @@ class Linker:
 
     def login_user(self, user_name, password):
         db_result = self.query("SELECT password FROM users WHERE name=%(user_name)s;",
-        {'user_name' : user_name})
+        {'user_name' : user_name}, f"Failed to query login on user - {user_name}")
         if db_result == None or len(db_result) == 0 or len(db_result[0]) == 0:
             return False
         if db_result[0][0] == password:
@@ -38,7 +38,7 @@ class Linker:
     def register_user(self, user_name, password, email):
         rows_affected = self.non_query("INSERT INTO users (name, password, email) "
         "VALUES (\'%(user_name)s\', \'%(password)s\', \'%(email)s\');",
-        {'user_name': user_name, 'password': password, 'email' : email})
+        {'user_name': user_name, 'password': password, 'email' : email}, f"Failed to query register on user - {user_name}")
         if rows_affected == None:
             return False
         return True
