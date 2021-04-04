@@ -3,7 +3,7 @@ from Models.Learn import learn_from_dataset, generate_output
 from Models.Linker import Linker
 import Models.Check
 
-UPLOAD_FOLDER = 'Server Side\Dataset\\'
+UPLOAD_FOLDER = 'Dataset/'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
