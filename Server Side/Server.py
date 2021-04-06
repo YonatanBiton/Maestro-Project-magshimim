@@ -40,8 +40,7 @@ def get_midi_files(file_name):
 def post_login():
     required_args = [
         'username',
-        'password',
-        'email'
+        'password'
     ]
     errors = []
     if not Models.Check.are_args_in_form(request.form, required_args, errors):
