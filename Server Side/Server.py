@@ -13,6 +13,8 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route('/', methods=['GET'])
 def get_index():
+    if 'logged_user' not in session or session['logged_user'] == None:
+        return redirect('/login')
     return render_template('client.html', MidiLinkPaste='http://127.0.0.1:5000/Dataset/bach.mid')
 
 
@@ -36,7 +38,17 @@ def get_midi_files(file_name):
 
 @app.route('/login', methods=['POST'])
 def post_login():
-    return "test"
+    required_args = [
+        'username',
+        'password',
+        'email'
+    ]
+    errors = []
+    if not Models.Check.are_args_in_form(request.form, required_args, errors):
+        return render_template('login.html', ErrorMessage=" ".join(errors))
+    logged_user = Linker().login_user(request.form['username'], request.form['password'])
+    session['logged_user'] = logged_user
+    return redirect('/') if logged_user != None else redirect('/login')
 
 
 @app.route('/signup', methods=['POST'])
@@ -49,8 +61,9 @@ def post_signup():
     errors = []
     if not Models.Check.are_args_in_form(request.form, required_args, errors) or not Models.Check.is_password_confirmed(request.form, errors): 
         return render_template('singup.html', ErrorMessage=" ".join(errors))
-    registration_succeeded = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
-    return redirect('/') if registration_succeeded else redirect('/signup')
+    registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
+    session['logged_user'] = registered_user
+    return redirect('/') if registered_user != None else redirect('/signup')
 
 
 @app.route('/', methods=['POST'])
