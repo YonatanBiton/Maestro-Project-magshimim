@@ -44,11 +44,11 @@ def post_signup():
     required_args = [
         'username',
         'password',
-        'email',
-        'confirmPassword'
+        'email'
     ]
-    if not Models.Check.are_args_in_form(request.form, required_args) or request.form['password'] != request.form['confirmPassword']:
-        return redirect('/signup')
+    errors = []
+    if not Models.Check.are_args_in_form(request.form, required_args, errors) or not Models.Check.is_password_confirmed(request.form, errors): 
+        return render_template('singup.html', ErrorMessage=" ".join(errors))
     registration_succeeded = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
     return redirect('/') if registration_succeeded else redirect('/signup')
 

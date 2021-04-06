@@ -27,8 +27,8 @@ class Linker:
 
     def login_user(self, user_name, password):
         db_result = self.query("SELECT password FROM users WHERE name=%(user_name)s;",
-        {'user_name' : user_name}, f"Failed to query login on user - {user_name}")
-        if db_result == None or len(db_result) == 0 or len(db_result[0]) == 0:
+        {'user_name' : user_name}, f"Failed to query login on user - {user_name}.")
+        if db_result == None or db_result == 0 or len(db_result) == 0 or len(db_result[0]) == 0:
             return False
         if db_result[0][0] == password:
             return True
@@ -38,10 +38,30 @@ class Linker:
     def register_user(self, user_name, password, email):
         rows_affected = self.non_query("INSERT INTO users (name, active, password, email) "
         "VALUES (\'%(user_name)s\', 1, \'%(password)s\', \'%(email)s\');",
-        {'user_name': user_name, 'password': password, 'email' : email}, f"Failed to query register on user - {user_name}")
-        if rows_affected == None:
+        {'user_name': user_name, 'password': password, 'email' : email}, f"Failed to query register on user - {user_name}.")
+        if rows_affected == None or rows_affected == 0:
             return False
         return True
+
+
+    def is_user_name_unique(self, user_name):
+        db_result = self.query("SELECT name FROM users WHERE name=%(user_name)s;",
+        {'user_name' : user_name}, f"Failed to check if the user name {user_name} is unique.")
+        if db_result == None or db_result > 0:
+            return False
+        if db_result == 0:
+            return True
+        return False
+
+
+    def is_email_unique(self, email):
+        db_result = self.query("SELECT email FROM users WHERE name=%(email)s;",
+        {'email' : email}, f"Failed to check if the email {email} is unique.")
+        if db_result == None or db_result > 0:
+            return False
+        if db_result == 0:
+            return True
+        return False
 
 
     def query(self, message, args={}, error_message="Db query error!"):
@@ -57,7 +77,7 @@ class Linker:
             self.__cursor.execute(query)
             self.__db.commit()
             print(self.__cursor.rowcount)
-            return self.__cursor.rowcount if self.__cursor.rowcount > 0 else None
+            return self.__cursor.rowcount 
         except mysql.connector.Error as mysql_error:
             print (f"{error_message}\nSQL Error: {str(mysql_error)}")
             return None
