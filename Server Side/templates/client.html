@@ -23,10 +23,19 @@
     .bord {
       border-style: solid;
       border-width: 4px;
-      border-color: #7cfc00;
+      border-color: #5cb85c;
       border-spacing: 10px;
 
 
+    }
+
+    .visual {
+      background-color: lightgrey;
+      width: 1880px;
+      border: 1px solid black;
+      padding: 50px;
+      margin: 20px;
+      height: 600px;
     }
 
     .showFiles {
@@ -101,42 +110,47 @@
     </ul>
     <ul class="nav navbar-nav ml-auto">
       <span class="glyphicon glyphicon-user"></span>
-      <li class="nav-item"><a href="singup.html" class="nav-link"> Sign Up</a>
+      <li class="nav-item"><a href="signup" class="nav-link"> Sign Up</a>
       </li>
-      <li class="nav-item"><a href="login.html" class="nav-link"> <i class="fa fa-globe"></i>Login</a></li>
+      <li class="nav-item"><a href="login" class="nav-link"> <i class="fa fa-globe"></i>Login</a></li>
     </ul>
   </nav>
 
+  <div class="visual">
+    <div style="float: right; width: 850px;" class="container mt-5">
+      <div class="custom-file mb-4">
+        <form method="POST" action="/" enctype="multipart/form-data" accept-charset="">
+          <input type="file" class="custom-file-input" id="customFile" name="midFile" accept=".mid" multiple
+            onchange="manager(this)" />
+          <label class="custom-file-label" for="customFile">Choose file</label>
+          <div class="bord">
+            <p style="margin: 40px; color: black">Selected files:</p>
 
-  <div style="float: right; width: 850px;" class="container mt-5">
-    <div class="custom-file mb-4">
-      <form method="POST" action="/" enctype="multipart/form-data" accept-charset="">
-        <input type="file" class="custom-file-input" id="customFile" name="midFile" accept=".mid" multiple
-          onchange="manager(this)" />
-        <label class="custom-file-label" for="customFile">Choose file</label>
-        <div class="bord">
-          <p style="margin: 40px; color: black">Selected files:</p>
+            <div style="overflow-y: scroll; height:200px;" class="showFiles" id="fileList"></div>
+          </div>
+          <div class="container mt-1">
+            <input class="btn btn-success" type="submit" value="Upload" style="width: 796px" accept=".mid" />
+          </div>
+        </form>
+      </div>
+      <div style="margin-top: 20px; margin-left: 160px;">
+        <form action="/learn" method="POST">
+          <input style="width: 500px;" class="btn btn-primary" type="submit" value="Start Learning!" />
+        </form>
 
-          <div class="showFiles" id="fileList"></div>
-        </div>
-        <div class="container mt-1">
-          <input class="btn btn-success" type="submit" value="Upload" style="width: 796px" accept=".mid" />
-        </div>
-      </form>
+      </div>
     </div>
-    <div style="margin-top: 20px; margin-left: 350px;">
-      <form action="/learn" method="POST">
-        <input type="submit" value="Start Learning" />
-      </form>
+
+
+
+    <div style="overflow: scroll; width:700px; height: 400px; margin-top:50px">
+      <midi-visualizer type="piano-roll" id="mainVisualizer" src="{{MidiLinkPaste}}"></midi-visualizer>
+
     </div>
-  </div>
-
-
-
-  <div>
-    <midi-visualizer type="piano-roll" id="mainVisualizer" src="{{MidiLinkPaste}}"></midi-visualizer>
-    <midi-player src="{{MidiLinkPaste}}" sound-font visualizer="#mainVisualizer" id="mainPlayer">
-    </midi-player>
+    <div style="margin-left:160px">
+      <midi-player src="{{MidiLinkPaste}}" sound-font visualizer="#mainVisualizer" id="mainPlayer">
+      </midi-player>
+    </div>
   </div>
 
 </body>
