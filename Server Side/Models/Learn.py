@@ -1,5 +1,10 @@
 import os
 
+def learning_thread(dataset_path, training_amount, outputs_amount):
+    learn_from_dataset(dataset_path, training_amount)
+    generate_output(dataset_path, outputs_amount)
+
+
 def learn_from_dataset(dataset_path, training_amount):
     os.system(f'cmd /c "convert_dir_to_note_sequences \ --input_dir={dataset_path} \ --output_file={dataset_path}/tmp/notesequences.tfrecord \ --recursive"')
     os.system(f'cmd /c "polyphony_rnn_create_dataset \ --input={dataset_path}/tmp/notesequences.tfrecord \ --output_dir={dataset_path}/tmp/polyphony_rnn/sequence_examples \ --eval_ratio=0.10"')
