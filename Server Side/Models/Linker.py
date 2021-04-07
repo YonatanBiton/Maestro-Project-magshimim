@@ -31,7 +31,7 @@ class Linker:
         if db_result == None or db_result == 0 or len(db_result) == 0 or len(db_result[0]) < 3 or str(db_result[0][1]) == '0':
             return None
         if db_result[0][0] == password:
-            return User(user_name, db_result[0][1], password, db_result[0][2])
+            return User(str(user_name), int(db_result[0][1]), str(password), str(db_result[0][2]))
         return None
 
 
@@ -41,7 +41,7 @@ class Linker:
         {'user_name': user_name, 'password': password, 'email' : email}, f"Failed to query register on user - {user_name}.")
         if rows_affected == None or rows_affected == 0:
             return None
-        return User(user_name, 1, password, email)
+        return User(str(user_name), 1, str(password), str(email))
 
 
     def is_user_name_unique(self, user_name):
