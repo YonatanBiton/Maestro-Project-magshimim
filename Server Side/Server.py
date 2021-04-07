@@ -61,8 +61,12 @@ def get_midi_files(folder_name):
             return ""
         logged_user = User(session['logged_user'])
         if logged_user.name == folder_name and logged_user.active == 1:
+            logged_user.create_folder_if_no_exists(UPLOAD_FOLDER)
             folder_path = f'{os.getcwd()}/Server Side/{UPLOAD_FOLDER}{folder_name}'
-            file_name = random.choice(os.listdir(folder_path))
+            try:
+                file_name = random.choice(os.listdir(folder_path))
+            except IndexError:
+                return ""
             midi_file = open(os.path.join(folder_path, file_name), 'rb')
             midi_file_content = midi_file.read()
             midi_file.close()
@@ -118,10 +122,11 @@ def post_index():
         logged_user = User(session['logged_user'])
         if logged_user.active != 1:
             return redirect(request.url)
+        logged_user.create_folder_if_no_exists(UPLOAD_FOLDER)
         for midi_file in request.files.getlist('midFile'):
             if midi_file.filename.endswith('.mid'):
                 filename = midi_file.filename
-                midi_file.save(f'{UPLOAD_FOLDER}{logged_user.name}/{filename}')
+                midi_file.save(f'{os.getcwd()}/Server Side/{UPLOAD_FOLDER}{logged_user.name}/{filename}')
     return redirect(request.url)
 
 
@@ -140,6 +145,7 @@ def post_learn():
     logged_user = User(session['logged_user'])
     if logged_user.active != 1:
         return redirect('/')
-    learn_thread = threading.Thread(target=learning_thread, args=(f'UPLOAD_FOLDER{logged_user.name}', 5, 1)) 
+    logged_user.create_folder_if_no_exists(UPLOAD_FOLDER)
+    learn_thread = threading.Thread(target=learning_thread, args=(f'{UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
     learn_thread.start()
     return redirect('/')
