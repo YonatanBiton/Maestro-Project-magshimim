@@ -30,6 +30,11 @@ def get_login():
     return render_template('login.html')
 
 
+@app.route('/home', methods=['GET'])
+def get_home():
+    return render_template('home.html') 
+
+
 @app.route('/Dataset/<file_name>', methods=['GET'])
 def get_midi_files(file_name):
     midi_file = open(f'Dataset/{file_name}', 'rb')
