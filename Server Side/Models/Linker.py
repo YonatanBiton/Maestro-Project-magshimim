@@ -15,8 +15,7 @@ class Linker:
                 password = DB_PASSWORD,
                 database = DB_NAME
             )
-            self.__cursor = self.__db.cursor()
-
+            self.__cursor = self.__db.cursor(buffered=True)
             self.__cursor.execute("CREATE TABLE IF NOT EXISTS users "
             "(id INT AUTO_INCREMENT, active INT NOT NULL, name VARCHAR(20) NOT NULL UNIQUE,"
             " password VARCHAR(30) NOT NULL, email VARCHAR(254) NOT NULL UNIQUE, PRIMARY KEY (id));")
@@ -27,7 +26,7 @@ class Linker:
     
 
     def login_user(self, user_name, password):
-        db_result = self.query("SELECT password, active, email FROM users WHERE name=%(user_name)s;",
+        db_result = self.query("SELECT password, active, email FROM users WHERE name=\'%(user_name)s\';",
         {'user_name' : user_name}, f"Failed to query login on user - {user_name}.")
         if db_result == None or db_result == 0 or len(db_result) == 0 or len(db_result[0]) < 3 or str(db_result[0][1]) == '0':
             return None
@@ -46,7 +45,7 @@ class Linker:
 
 
     def is_user_name_unique(self, user_name):
-        db_result = self.query("SELECT name FROM users WHERE name=%(user_name)s;",
+        db_result = self.query("SELECT name FROM users WHERE name=\'%(user_name)s\';",
         {'user_name' : user_name}, f"Failed to check if the user name {user_name} is unique.")
         if db_result == None or db_result > 0:
             return False
@@ -56,7 +55,7 @@ class Linker:
 
 
     def is_email_unique(self, email):
-        db_result = self.query("SELECT email FROM users WHERE name=%(email)s;",
+        db_result = self.query("SELECT email FROM users WHERE name=\'%(email)s\';",
         {'email' : email}, f"Failed to check if the email {email} is unique.")
         if db_result == None or db_result > 0:
             return False

@@ -1,19 +1,21 @@
 from flask import Flask, request, redirect, render_template, session
 from Models.Learn import learning_thread 
 from Models.Linker import Linker
+from Models.User import User
 import Models.Check
 import threading
 
 UPLOAD_FOLDER = 'Dataset/'
 
 app = Flask(__name__)
+app.secret_key = '842jkfhsjdfhHJKFAH89421)(@#*jdjsahf'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
 @app.route('/', methods=['GET'])
 def get_index():
-    if 'logged_user' not in session or session['logged_user'] == None:
+    if 'logged_user' not in session:
         return redirect('/login')
     return render_template('client.html', MidiLinkPaste='http://127.0.0.1:5000/Dataset/bach.mid')
 
@@ -46,7 +48,8 @@ def post_login():
     if not Models.Check.are_args_in_form(request.form, required_args, errors):
         return render_template('login.html', ErrorMessage=" ".join(errors))
     logged_user = Linker().login_user(request.form['username'], request.form['password'])
-    session['logged_user'] = logged_user
+    if  logged_user != None:
+        session['logged_user'] = logged_user.to_json()
     return redirect('/') if logged_user != None else redirect('/login')
 
 
@@ -61,7 +64,8 @@ def post_signup():
     if not Models.Check.are_args_in_form(request.form, required_args, errors) or not Models.Check.is_password_confirmed(request.form, errors): 
         return render_template('singup.html', ErrorMessage=" ".join(errors))
     registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
-    session['logged_user'] = registered_user
+    if registered_user != None:
+        session['logged_user'] = registered_user.to_json()
     return redirect('/') if registered_user != None else redirect('/signup')
 
 
