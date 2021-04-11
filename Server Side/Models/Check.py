@@ -15,7 +15,7 @@ def are_args_in_form(form, args, error_output=[]):
 
 def is_password_confirmed(form, error_output=[]):
     args_error = ""
-    if are_args_in_form(form, ['password', 'confirmPassword'], args_error):
+    if not are_args_in_form(form, ['password', 'confirmPassword'], args_error):
         error_output.append(args_error)
         return False
     if not form['password'] == form['confirmPassword']:
@@ -26,7 +26,7 @@ def is_password_confirmed(form, error_output=[]):
 
 def is_user_name_valid(form, error_output=[]):
     args_error = ""
-    if are_args_in_form(form, ['username'], args_error):
+    if not are_args_in_form(form, ['username'], args_error):
         error_output.append(args_error)
         return False
     if len(form['username']) < 2 or len(form['username']) > 20:
@@ -40,7 +40,7 @@ def is_user_name_valid(form, error_output=[]):
 
 def is_email_valid(form, error_output=[]):
     args_error = ""
-    if are_args_in_form(form, ['email'], args_error):
+    if not are_args_in_form(form, ['email'], args_error):
         error_output.append(args_error)
         return False
     if len(form['email']) < 1 or len(form['email']) > 254 or '@' not in form['email']:
@@ -54,7 +54,7 @@ def is_email_valid(form, error_output=[]):
 
 def is_password_valid(form, error_output=[]):
     args_error = ""
-    if are_args_in_form(form, ['password'], args_error):
+    if not are_args_in_form(form, ['password'], args_error):
         error_output.append(args_error)
         return False
     if len(form['password']) < 8 or len(form['password']) > 30:
