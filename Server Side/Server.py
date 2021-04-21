@@ -19,6 +19,8 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def get_index():
     try:
         logged_user = User(session)
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{folder_name}'
+        os.listdir
         return render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}')
     except Exception:
         return redirect('/login')
