@@ -12,6 +12,19 @@ def check_args_in_object(object, args):
             raise MaestroException()
 
 
+def check_logged_user(session):
+    if 'logged_user' not in session:
+        raise MaestroException(no_warning_message=True)
+    required_args = [
+        'name',
+        'active',
+        'password',
+        'email'
+    ]
+    check_args_in_object(session['logged_user'], required_args)
+    if str(session['logged_user']['active']) != '1':
+        raise MaestroException(no_warning_message=True)
+    
 def check_signup_request(form):
     required_args = [
         'username',
@@ -33,7 +46,7 @@ def check_password_confirmed(form):
 
 
 def check_valid_user_name(form):
-    check_args_in_object(form, ['username']):
+    check_args_in_object(form, ['username'])
     check_allowed_characters(form['username'], allow_special=False)
     if len(form['username']) < 2 or len(form['username']) > 20:
         raise MaestroException()
@@ -42,7 +55,7 @@ def check_valid_user_name(form):
 
 
 def check_valid_email(form):
-    check_args_in_object(form, ['email']):
+    check_args_in_object(form, ['email'])
     if len(form['email']) < 1 or len(form['email']) > 254 or '@' not in form['email']:
         raise MaestroException()
     if(not Linker.is_email_unique(form['email'])):
@@ -50,7 +63,7 @@ def check_valid_email(form):
 
 
 def check_valid_password(form):
-    check_args_in_object(form, ['password']):
+    check_args_in_object(form, ['password'])
     check_must_have_characters(form['password'], must_have_special=False)
     if len(form['password']) < 8 or len(form['password']) > 30:
         raise MaestroException()
