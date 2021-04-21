@@ -23,7 +23,7 @@ def get_index():
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_load = ""
         midi_files = glob.glob(f"{folder_path}/*.mid")
-        current_file =  session['midi_index'] + 1 if 'midi_index' in session else 1
+        current_file =  session['midi_index'] + 1 if 'midi_index' in session else 0
         current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
         for file in midi_files:
                 midi_load += f"<li>{ntpath.basename(file)}</li>"
