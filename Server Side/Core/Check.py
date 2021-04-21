@@ -21,7 +21,9 @@ def check_signup_request(form):
     ]
     check_args_in_object(form, required_args)
     check_valid_email(form)
+    check_valid_user_name(form)
     check_password_confirmed(form)
+    check_valid_password()
 
 
 def check_password_confirmed(form):
@@ -49,20 +51,39 @@ def check_valid_email(form):
 
 def check_valid_password(form):
     check_args_in_object(form, ['password']):
+    check_must_have_characters(form['password'], must_have_special=False)
     if len(form['password']) < 8 or len(form['password']) > 30:
         raise MaestroException()
-
+    
 
 def check_allowed_characters(string, allow_numbers=True, allow_english=True, allow_upper_english=True, allow_special=True):
     allowed_chars = ""
     if allow_numbers:
-        allowed_chars.append(ALLOWED_KEYBOARD_NUMBERS)
+        allowed_chars += ALLOWED_KEYBOARD_NUMBERS
     if allow_english:
-        allowed_chars.append(ALLOWED_KEYBOARD_ENGLISH)
+        allowed_chars += ALLOWED_KEYBOARD_ENGLISH
     if allow_upper_english:
-        allowed_chars.append(ALLOWED_KEYBOARD_UPPER_ENGLISH)
+        allowed_chars += ALLOWED_KEYBOARD_UPPER_ENGLISH
     if allow_special:
-        allowed_chars.append(ALLOWED_KEYBOARD_SPECIAL)
+        allowed_chars += ALLOWED_KEYBOARD_SPECIAL
     for char in string:
         if char not in allowed_chars:
             raise MaestroException()
+
+def check_must_have_characters(string, must_have_number=True, must_have_english=True, must_have_upper_enlish=True, must_have_special=True):
+    number_found = False
+    english_found = False
+    english_upper_found = False
+    special_found = False
+    for char in string:
+        if char in ALLOWED_KEYBOARD_NUMBERS:
+            number_found = True
+        elif char in ALLOWED_KEYBOARD_ENGLISH:
+            english_found = True
+        elif char in ALLOWED_KEYBOARD_UPPER_ENGLISH:
+            english_upper_found = True
+        elif char in ALLOWED_KEYBOARD_SPECIAL:
+            special_found
+    if (not number_found and must_have_number) or (not english_found and must_have_english) or (not english_upper_found and must_have_upper_enlish) or (not special_found and must_have_special):
+        raise MaestroException()
+        
