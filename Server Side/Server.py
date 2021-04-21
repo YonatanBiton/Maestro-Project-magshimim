@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session
 from Core.Learn import learning_thread 
 from Models.Linker import Linker
 from Models.User import User
+from Models.MaestroException import MaestroException
 import Core.Check
 import threading
 import os
@@ -93,11 +94,6 @@ def post_login():
 
 @app.route('/signup', methods=['POST'])
 def post_signup():
-    required_args = [
-        'username',
-        'password',
-        'email'
-    ]
     errors = []
     if not Core.Check.are_args_in_form(request.form, required_args, errors) or not Core.Check.is_password_confirmed(request.form, errors): 
         return render_template('singup.html', ErrorMessage=" ".join(errors))
