@@ -36,7 +36,7 @@ def check_signup_request(form):
     check_valid_email(form)
     check_valid_user_name(form)
     check_password_confirmed(form)
-    check_valid_password()
+    check_valid_password(form)
 
 
 def check_login_request(form):
@@ -44,7 +44,7 @@ def check_login_request(form):
         'username',
         'password'
     ]
-    check_args_in_object(required_args)
+    check_args_in_object(form, required_args)
 
 
 def check_password_confirmed(form):
@@ -58,7 +58,7 @@ def check_valid_user_name(form):
     check_allowed_characters(form['username'], allow_special=False)
     if len(form['username']) < 2 or len(form['username']) > 20:
         raise MaestroException()
-    if(not Linker.is_user_name_unique(form['username'])):
+    if(not Linker().is_user_name_unique(form['username'])):
         raise MaestroException('This user name already exists! Please try a different one.')
 
 
@@ -66,7 +66,7 @@ def check_valid_email(form):
     check_args_in_object(form, ['email'])
     if len(form['email']) < 1 or len(form['email']) > 254 or '@' not in form['email']:
         raise MaestroException()
-    if(not Linker.is_email_unique(form['email'])):
+    if not Linker().is_email_unique(form['email']):
         raise MaestroException('This email is already registered! Please try a different one or try logging in with the given email.')
 
 

@@ -1,9 +1,9 @@
 from pathlib import Path
-from Core.Check import check_logged_user
 import Config
 
 class User():
     def __init__(self, name, active=-1, password="", email=""):
+        from Core.Check import check_logged_user
         if active == -1 and password == "" and email == "":
             check_logged_user(name)
             self.from_json(name['logged_user'])
@@ -12,7 +12,7 @@ class User():
             self.active = active
             self.password = password
             self.email = email
-        create_folder_if_no_exists(Config.UPLOAD_FOLDER)
+        self.create_folder_if_no_exists(Config.UPLOAD_FOLDER)
 
 
     def to_json(self):

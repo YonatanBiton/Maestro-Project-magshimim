@@ -70,11 +70,12 @@ def get_midi_files(folder_name):
 @app.route('/login', methods=['POST'])
 def post_login():
     try:
-        Core.Check.check_login_request()
+        Core.Check.check_login_request(request.form)
         logged_user = Linker().login_user(request.form['username'], request.form['password'])
-        if logged_user != None:
-            session['logged_user'] = logged_user.to_json()
-        return redirect('/') if logged_user != None else redirect('/login')
+        if logged_user == None:
+            raise MaestroException('The username or password is incorrect.')
+        session['logged_user'] = logged_user.to_json()
+        return redirect('/') 
     except MaestroException as e:
         return render_template('login.html', ErrorMessage=e.error_message)
     except Exception:
@@ -83,8 +84,9 @@ def post_login():
 
 @app.route('/signup', methods=['POST'])
 def post_signup():
+    print('hi')
     try:
-        Core.Check.check_signup_request()
+        Core.Check.check_signup_request(request.form)
         registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
         if registered_user != None:
             session['logged_user'] = registered_user.to_json()

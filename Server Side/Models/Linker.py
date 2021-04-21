@@ -48,19 +48,19 @@ class Linker:
     def is_user_name_unique(self, user_name):
         db_result = self.query("SELECT name FROM users WHERE name=\'%(user_name)s\';",
         {'user_name' : user_name}, f"Failed to check if the user name {user_name} is unique.")
-        if db_result == None or db_result > 0:
+        if db_result == None or len(db_result) > 0:
             return False
-        if db_result == 0:
+        if len(db_result) == 0:
             return True
         return False
 
 
     def is_email_unique(self, email):
-        db_result = self.query("SELECT email FROM users WHERE name=\'%(email)s\';",
+        db_result = self.query("SELECT email FROM users WHERE email=\'%(email)s\';",
         {'email' : email}, f"Failed to check if the email {email} is unique.")
-        if db_result == None or db_result > 0:
+        if db_result == None or len(db_result) > 0:
             return False
-        if db_result == 0:
+        if len(db_result) == 0:
             return True
         return False
 
