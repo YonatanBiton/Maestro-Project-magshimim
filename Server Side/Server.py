@@ -146,6 +146,6 @@ def post_learn():
     if logged_user.active != 1:
         return redirect('/')
     logged_user.create_folder_if_no_exists(UPLOAD_FOLDER)
-    learn_thread = threading.Thread(target=learning_thread, args=(f'{UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
+    learn_thread = threading.Thread(target=learning_thread, args=(f'"Server Side"/{UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
     learn_thread.start()
     return redirect('/')
