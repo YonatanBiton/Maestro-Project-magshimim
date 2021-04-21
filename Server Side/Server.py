@@ -6,8 +6,9 @@ from Models.MaestroException import MaestroException
 import Core.Check
 import threading
 import os
-import random
+import glob
 import Config
+import ntpath
 
 app = Flask(__name__)
 app.secret_key = Config.SECRET_KEY
@@ -21,11 +22,12 @@ def get_index():
         logged_user = User(session)
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_load = ""
-        midi_files = os.listdir(folder_path)
+        midi_files = glob.glob(f"{folder_path}/*.mid")
+        current_file =  session['midi_index'] + 1 if 'midi_index' in session else 1
+        current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
         for file in midi_files:
-            if file.endswith('.mid'):
-                midi_load += f"<li>{file}<label style='margin-left:150px;'><button type='button' class='btn btn-danger' >DeleteFile</button></label></li>"
-        template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}')
+                midi_load += f"<li>{ntpath.basename(file)}<label style='margin-left:150px;'><button type='button' class='btn btn-danger' >DeleteFile</button></label></li>"
+        template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}', CurrentSongName=current_song_name, CurrentFile=current_file, FilesInLab=len(midi_files))
         template = template.replace('@MidisLoad', midi_load)
         return template
     except Exception:
@@ -63,10 +65,10 @@ def get_midi_files(folder_name):
         logged_user = User(session)
         if logged_user.name == folder_name:
             folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{folder_name}'
-            try:
-                file_name = random.choice(os.listdir(folder_path))
-            except IndexError:
-                return ""
+            midi_files = glob.glob(f"{folder_path}/*.mid")
+            if 'midi_index' not in session or session['midi_index'] >= len(midi_files):
+                return midi_file_content
+            file_name = ntpath.basename(midi_files[session['midi_index']])
             midi_file = open(os.path.join(folder_path, file_name), 'rb')
             midi_file_content = midi_file.read()
             midi_file.close()
@@ -83,6 +85,7 @@ def post_login():
         if logged_user == None:
             raise MaestroException('The username or password is incorrect.')
         session['logged_user'] = logged_user.to_json()
+        session['midi_index'] = 0
         return redirect('/') 
     except MaestroException as e:
         return render_template('login.html', ErrorMessage=e.error_message)
@@ -97,6 +100,7 @@ def post_signup():
         registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
         if registered_user != None:
             session['logged_user'] = registered_user.to_json()
+            session['midi_index'] = 0
         return redirect('/') if registered_user != None else redirect('/signup')
     except MaestroException as e:
         return render_template('singup.html', ErrorMessage=e.error_message)
@@ -122,6 +126,36 @@ def post_learn():
         logged_user = User(session)
         learn_thread = threading.Thread(target=learning_thread, args=(f'"Server Side"/{Config.UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
         learn_thread.start()
+        return redirect('/')
+    except Exception:
+        return redirect('/')
+
+
+@app.route('/next', methods=['POST'])
+def post_next():
+    try:
+        logged_user = User(session)
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
+        midi_files = glob.glob(f"{folder_path}/*.mid")
+        if 'midi_index' in session:
+            session['midi_index'] = session['midi_index'] + 1 if session['midi_index'] < len(midi_files) - 1 else 0
+        else:
+            session['midi_index'] = 0
+        return redirect('/')
+    except Exception:
+        return redirect('/')
+
+
+@app.route('/prev', methods=['POST'])
+def post_prev():
+    try:
+        logged_user = User(session)
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
+        midi_files = glob.glob(f"{folder_path}/*.mid")
+        if 'midi_index' in session:
+            session['midi_index'] = session['midi_index'] - 1 if session['midi_index'] > 0 else len(midi_files) - 1
+        else:
+            session['midi_index'] = 0
         return redirect('/')
     except Exception:
         return redirect('/')
