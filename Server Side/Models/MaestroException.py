@@ -1,0 +1,2 @@
+class MaestroException(Exception):
+    pass

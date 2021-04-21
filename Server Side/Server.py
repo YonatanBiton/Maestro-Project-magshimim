@@ -1,8 +1,8 @@
 from flask import Flask, request, redirect, render_template, session
-from Models.Learn import learning_thread 
+from Core.Learn import learning_thread 
 from Models.Linker import Linker
 from Models.User import User
-import Models.Check
+import Core.Check
 import threading
 import os
 import random
@@ -25,7 +25,7 @@ def get_index():
         'password',
         'email'
     ]
-    if not Models.Check.are_args_in_form(session['logged_user'], required_args):
+    if not Core.Check.are_args_in_form(session['logged_user'], required_args):
         return redirect('/login')
     logged_user = User(session['logged_user'])
     logged_user.create_folder_if_no_exists(UPLOAD_FOLDER)
@@ -57,7 +57,7 @@ def get_midi_files(folder_name):
     ]
     midi_file_content = ""
     if 'logged_user' in session:
-        if not Models.Check.are_args_in_form(session['logged_user'], required_args):
+        if not Core.Check.are_args_in_form(session['logged_user'], required_args):
             return ""
         logged_user = User(session['logged_user'])
         if logged_user.name == folder_name and logged_user.active == 1:
@@ -80,7 +80,7 @@ def post_login():
         'password'
     ]
     errors = []
-    if not Models.Check.are_args_in_form(request.form, required_args, errors):
+    if not Core.Check.are_args_in_form(request.form, required_args, errors):
         return render_template('login.html', ErrorMessage=" ".join(errors))
     logged_user = Linker().login_user(request.form['username'], request.form['password'])
     if logged_user != None:
@@ -99,7 +99,7 @@ def post_signup():
         'email'
     ]
     errors = []
-    if not Models.Check.are_args_in_form(request.form, required_args, errors) or not Models.Check.is_password_confirmed(request.form, errors): 
+    if not Core.Check.are_args_in_form(request.form, required_args, errors) or not Core.Check.is_password_confirmed(request.form, errors): 
         return render_template('singup.html', ErrorMessage=" ".join(errors))
     registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
     if registered_user != None:
@@ -117,7 +117,7 @@ def post_index():
             'password',
             'email'
         ]
-        if not Models.Check.are_args_in_form(session['logged_user'], required_args):
+        if not Core.Check.are_args_in_form(session['logged_user'], required_args):
             return redirect(request.url)
         logged_user = User(session['logged_user'])
         if logged_user.active != 1:
@@ -140,7 +140,7 @@ def post_learn():
         'password',
         'email'
     ]
-    if not Models.Check.are_args_in_form(session['logged_user'], required_args):
+    if not Core.Check.are_args_in_form(session['logged_user'], required_args):
         return redirect('/')
     logged_user = User(session['logged_user'])
     if logged_user.active != 1:

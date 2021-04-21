@@ -1,4 +1,5 @@
 from Models.User import User
+from Core.Security import md5_hash
 import mysql.connector
 
 DB_HOST = "localhost"
@@ -18,7 +19,7 @@ class Linker:
             self.__cursor = self.__db.cursor(buffered=True)
             self.__cursor.execute("CREATE TABLE IF NOT EXISTS users "
             "(id INT AUTO_INCREMENT, active INT NOT NULL, name VARCHAR(20) NOT NULL UNIQUE,"
-            " password VARCHAR(30) NOT NULL, email VARCHAR(254) NOT NULL UNIQUE, PRIMARY KEY (id));")
+            " password VARCHAR(32) NOT NULL, email VARCHAR(254) NOT NULL UNIQUE, PRIMARY KEY (id));")
         except mysql.connector.Error as mysql_error:
             print (f"Failed to open the database!!!\nSQL Error: {str(mysql_error)}")
         except Exception as ex:
@@ -30,7 +31,7 @@ class Linker:
         {'user_name' : user_name}, f"Failed to query login on user - {user_name}.")
         if db_result == None or db_result == 0 or len(db_result) == 0 or len(db_result[0]) < 3 or str(db_result[0][1]) == '0':
             return None
-        if db_result[0][0] == password:
+        if db_result[0][0] == md5_hash(password):
             return User(str(user_name), int(db_result[0][1]), str(password), str(db_result[0][2]))
         return None
 
@@ -38,10 +39,10 @@ class Linker:
     def register_user(self, user_name, password, email):
         rows_affected = self.non_query("INSERT INTO users (name, active, password, email) "
         "VALUES (\'%(user_name)s\', 1, \'%(password)s\', \'%(email)s\');",
-        {'user_name': user_name, 'password': password, 'email' : email}, f"Failed to query register on user - {user_name}.")
+        {'user_name': user_name, 'password': md5_hash(password), 'email' : email}, f"Failed to query register on user - {user_name}.")
         if rows_affected == None or rows_affected == 0:
             return None
-        return User(str(user_name), 1, str(password), str(email))
+        return User(str(user_name), 1, str(md5_hash(password)), str(email))
 
 
     def is_user_name_unique(self, user_name):
