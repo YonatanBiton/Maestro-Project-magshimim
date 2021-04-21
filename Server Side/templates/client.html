@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="shortcut icon" type="image/x-icon" href="static/OnlyMeastro.png" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <script
+    src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
+  <link rel="stylesheet" type="text/css" href="./midiCss.css" />
+
+  <title>Maestro</title>
+  <style>
+    .bord {
+      border-style: solid;
+      border-width: 4px;
+      border-color: #5cb85c;
+      border-spacing: 10px;
+
+
+    }
+
+    .form2 {
+      float: left;
+      margin-right: 500px;
+      list-style: none;
+    }
+
+    .hidden-form {
+      visibility: hidden;
+    }
+
+    .show-form {
+      visibility: visible !important;
+    }
+
+    .visual {
+      background-color: lightgrey;
+      width: 1880px;
+      border: 1px solid black;
+      padding: 50px;
+      margin: 20px;
+      height: 650px;
+    }
+
+    .showFiles {
+      color: green;
+
+    }
+
+    /* custom arrow shaped button css */
+    .btn-arrow-right,
+    .btn-arrow-left {
+      position: relative;
+      padding-left: 25px;
+      padding-right: 25px;
+    }
+
+    .btn-arrow-right {
+      padding-left: 50px;
+    }
+
+    .btn-arrow-left {
+      padding-right: 50px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-right:after,
+    .btn-arrow-left:before,
+    .btn-arrow-left:after {
+      /* make two squares (before and after), looking similar to the button */
+      content: "";
+      position: absolute;
+      top: 7px;
+      /* move it down because of rounded corners */
+      width: 22px;
+      /* same as height */
+      height: 22px;
+      /* button_outer_height / sqrt(2) */
+      background: inherit;
+      /* use parent background */
+      border: inherit;
+      /* use parent border */
+      border-left-color: transparent;
+      /* hide left border */
+      border-bottom-color: transparent;
+      /* hide bottom border */
+      border-radius: 0px 4px 0px 0px;
+      /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+      -webkit-border-radius: 0px 1px 0px 0px;
+      -moz-border-radius: 0px 1px 0px 0px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-right:after {
+      transform: rotate(45deg);
+      /* rotate right arrow squares 45 deg to point right */
+      -webkit-transform: rotate(45deg);
+      -moz-transform: rotate(45deg);
+      -o-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+    }
+
+    .btn-arrow-left:before,
+    .btn-arrow-left:after {
+      transform: rotate(225deg);
+      /* rotate left arrow squares 225 deg to point left */
+      -webkit-transform: rotate(225deg);
+      -moz-transform: rotate(225deg);
+      -o-transform: rotate(225deg);
+      -ms-transform: rotate(225deg);
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-left:before {
+      /* align the "before" square to the left */
+      left: -12px;
+    }
+
+    .btn-arrow-right:after,
+    .btn-arrow-left:after {
+      /* align the "after" square to the right */
+      right: -12px;
+    }
+
+    .btn-arrow-right:after,
+    .btn-arrow-left:before {
+      /* bring arrow pointers to front */
+      z-index: 2;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-left:after {
+      /* hide arrow tails background */
+      background-color: lightgrey;
+    }
+  </style>
+</head>
+
+<body>
+  <script language="JavaScript">
+    //manager function. checks if the files are valid and then updates the list
+    function manager(x) {
+      if (checkFileUploadExt(x) == true) {
+        updateList();
+      }
+    }
+    // this function will update the file list
+    updateList = function () {
+      var input = document.getElementById("customFile");
+      var output = document.getElementById("fileList");
+      var children = "";
+      for (var i = 0; i < input.files.length; ++i) {
+
+        children += "<li>" + input.files.item(i).name + "</li>";
+
+      }
+      output.innerHTML += children;
+    };
+
+
+
+
+    //This function will check if all of the files that the client insert are midi files
+    function checkFileUploadExt(fieldObj) {
+      var control = document.getElementById("customFile");
+      var filelength = control.files.length;
+      //checking all the files
+      for (var i = 0; i < control.files.length; i++) {
+        //getting each file information
+        var file = control.files[i];
+        var FileName = file.name;
+        var FileExt = FileName.substr(FileName.lastIndexOf('.') + 1);
+        //checking if extention is mid, if it isent will alert the user that all of the files have to be in midi format
+        if ((FileExt.toLowerCase() != "mid")) {
+          var error = "File type : " + FileExt + "\n\n";
+          error += "Please make sure your file is in midi  format .\n\n";
+          console.error(error);
+          alert("Please make sure your files are in midi format");
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Brand/logo -->
+    <a class="navbar-brand" href="home">
+      <img src="static/OnlyMeastro.png" alt="logo" style="height:50px; width: 30px;">
+    </a>
+
+    <!-- Links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/">Maestro</a>
+      </li>
+      </li>
+      <li class="nav-item"><a href="login" class="nav-link"> <i class="fa fa-globe"></i>Login</a></li>
+
+      <li class="nav-item"><a href="signup" class="nav-link"> Sign Up</a>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+      <span class="glyphicon glyphicon-user"></span>
+
+      <li class="nav-item"><label class="nav-link">{{ClientMessage}}</label></li>
+    </ul>
+  </nav>
+
+  <div class="visual">
+    <div style="float: right; width: 850px;" class="container mt-5">
+      <div class="custom-file mb-4">
+        <form method="POST" action="/" enctype="multipart/form-data" accept-charset="">
+          <input type="file" class="custom-file-input" id="customFile" name="midFile" accept=".mid" multiple
+            onchange="manager(this)" />
+          <label class="custom-file-label" for="customFile">Choose file</label>
+          <div class="bord">
+            <p style="margin: 40px; color: black">Selected files:</p>
+
+            <div style="overflow-y: scroll; height:200px; margin-left: 40px;" class="showFiles" id="fileList">
+              @MidisLoad
+            </div>
+          </div>
+          <div class="container mt-1">
+            <input class="btn btn-success" type="submit" value="Upload" style="width: 796px" accept=".mid" />
+          </div>
+        </form>
+      </div>
+      <div style="margin-top: 20px; margin-left: 160px;">
+        <form action="/learn" method="POST">
+          <input style="width: 500px;" class="btn btn-primary" type="submit" value="Start Learning!" />
+        </form>
+
+      </div>
+
+    </div>
+
+    <label style="margin-left: 270px;">{{CurrentSongName}}</label>
+    <div style="margin-left: 140px; margin-bottom: 50px;">
+
+      <form action="/prev" method="POST" style="display: inline;">
+        <button style="margin-right: 30px;" type="submit" class="btn btn-success btn-arrow-left">Prev</button>
+      </form>
+      <label> {{CurrentFile}} out of {{FilesInLab}} </label>
+      <form action="/next" method="POST" style="display: inline;">
+        <button style="margin-left: 30px;" type="submit" class="btn btn-success btn-arrow-right">Next</button>
+      </form>
+
+    </div>
+
+
+    <div style="overflow: scroll; width:700px; height: 400px; margin-top:50px">
+      <midi-visualizer type="piano-roll" id="mainVisualizer" src="{{MidiLinkPaste}}"></midi-visualizer>
+
+    </div>
+
+    <div style="margin-left:160px">
+      <midi-player src="{{MidiLinkPaste}}" sound-font visualizer="#mainVisualizer" id="mainPlayer">
+      </midi-player>
+    </div>
+  </div>
+
+  <!-- advanced options -->
+  <div>
+    <form action="/learn" method="POST">
+      <ul class="form2">
+        <li>
+          <input class="form-btn" type="button" value="advanced options">
+          <label class="hidden-form"> Insert amount of learning iteration (1-10000): <input type="number" id="iteration"
+              name="iterations" min="1" max="10000">
+          </label>
+          <label class="hidden-form"> Insert amount of songs outputs: <input type="number" name="outputs"> </label>
+        </li>
+      </ul>
+    </form>
+  </div>
+
+  <script>
+    $('.form-btn').click(function () {
+      $(this).next().toggleClass('show-form');
+      $(this).next().next().toggleClass('show-form');
+    });
+  </script>
+
+</body>
+
+</html>
