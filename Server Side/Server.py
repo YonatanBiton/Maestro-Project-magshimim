@@ -26,7 +26,7 @@ def get_index():
         current_file =  session['midi_index'] + 1 if 'midi_index' in session else 1
         current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
         for file in midi_files:
-                midi_load += f"<li>{ntpath.basename(file)}<label style='margin-left:150px;'><button type='button' class='btn btn-danger' >DeleteFile</button></label></li>"
+                midi_load += f"<li>{ntpath.basename(file)}</li>"
         template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}', CurrentSongName=current_song_name, CurrentFile=current_file, FilesInLab=len(midi_files))
         template = template.replace('@MidisLoad', midi_load)
         return template
