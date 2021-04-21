@@ -39,6 +39,14 @@ def check_signup_request(form):
     check_valid_password()
 
 
+def check_login_request(form):
+    required_args = [
+        'username',
+        'password'
+    ]
+    check_args_in_object(required_args)
+
+
 def check_password_confirmed(form):
     check_args_in_object(form, ['password', 'confirmPassword'])
     if not form['password'] == form['confirmPassword']:

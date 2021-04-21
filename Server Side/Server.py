@@ -31,6 +31,7 @@ def get_register():
     except Exception:
         return redirect('/home')
 
+
 @app.route('/login', methods=['GET'])
 def get_login():
     try:
@@ -65,72 +66,53 @@ def get_midi_files(folder_name):
     except Exception:
         return ""
 
+
 @app.route('/login', methods=['POST'])
 def post_login():
-    required_args = [
-        'username',
-        'password'
-    ]
-    errors = []
-    if not Core.Check.are_args_in_form(request.form, required_args, errors):
-        return render_template('login.html', ErrorMessage=" ".join(errors))
-    logged_user = Linker().login_user(request.form['username'], request.form['password'])
-    if logged_user != None:
-        if logged_user.active != 1:
-            return redirect('/login')
-        session['logged_user'] = logged_user.to_json()
-        logged_user.create_folder_if_no_exists(Config.UPLOAD_FOLDER)
-    return redirect('/') if logged_user != None else redirect('/login')
+    try:
+        Core.Check.check_login_request()
+        logged_user = Linker().login_user(request.form['username'], request.form['password'])
+        if logged_user != None:
+            session['logged_user'] = logged_user.to_json()
+        return redirect('/') if logged_user != None else redirect('/login')
+    except MaestroException as e:
+        return render_template('login.html', ErrorMessage=e.error_message)
+    except Exception:
+        return render_template('login.html')
 
 
 @app.route('/signup', methods=['POST'])
 def post_signup():
-    Core.Check.check_signup_request()
-    registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
-    if registered_user != None:
-        session['logged_user'] = registered_user.to_json()
-        registered_user.create_folder_if_no_exists(Config.UPLOAD_FOLDER)
-    return redirect('/') if registered_user != None else redirect('/signup')
-
+    try:
+        Core.Check.check_signup_request()
+        registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
+        if registered_user != None:
+            session['logged_user'] = registered_user.to_json()
+        return redirect('/') if registered_user != None else redirect('/signup')
+    except MaestroException as e:
+        return render_template('singup.html', ErrorMessage=e.error_message)
+    except Exception:
+        return render_template('singup.html')
 
 @app.route('/', methods=['POST'])
 def post_index():
-    if 'logged_user' in session:
-        required_args = [
-            'name',
-            'active',
-            'password',
-            'email'
-        ]
-        if not Core.Check.are_args_in_form(session['logged_user'], required_args):
-            return redirect(request.url)
-        logged_user = User(session['logged_user'])
-        if logged_user.active != 1:
-            return redirect(request.url)
-        logged_user.create_folder_if_no_exists(Config.UPLOAD_FOLDER)
+    try:
+        logged_user = User(session)
         for midi_file in request.files.getlist('midFile'):
             if midi_file.filename.endswith('.mid'):
                 filename = midi_file.filename
                 midi_file.save(f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}/{filename}')
-    return redirect(request.url)
+        return redirect(request.url)
+    except Exception:
+        return redirect(request.url)
 
 
 @app.route('/learn', methods=['POST'])
 def post_learn():
-    if 'logged_user' not in session:
+    try:
+        logged_user = User(session)
+        learn_thread = threading.Thread(target=learning_thread, args=(f'"Server Side"/{Config.UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
+        learn_thread.start()
         return redirect('/')
-    required_args = [
-        'name',
-        'active',
-        'password',
-        'email'
-    ]
-    if not Core.Check.are_args_in_form(session['logged_user'], required_args):
+    except Exception:
         return redirect('/')
-    logged_user = User(session['logged_user'])
-    if logged_user.active != 1:
-        return redirect('/')
-    logged_user.create_folder_if_no_exists(Config.UPLOAD_FOLDER)
-    learn_thread = threading.Thread(target=learning_thread, args=(f'"Server Side"/{Config.UPLOAD_FOLDER}{logged_user.name}', 5, 1)) 
-    learn_thread.start()
-    return redirect('/')
