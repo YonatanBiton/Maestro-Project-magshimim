@@ -19,9 +19,15 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def get_index():
     try:
         logged_user = User(session)
-        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{folder_name}'
-        os.listdir
-        return render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}')
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
+        midi_load = ""
+        midi_files = os.listdir(folder_path)
+        for file in midi_files:
+            if file.endswith('.mid'):
+                midi_load += f"<li>{file}<label style='margin-left:150px;'><button type='button' class='btn btn-danger' >DeleteFile</button></label></li>"
+        template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}')
+        template = template.replace('@MidisLoad', midi_load)
+        return template
     except Exception:
         return redirect('/login')
 
