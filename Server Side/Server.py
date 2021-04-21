@@ -86,7 +86,6 @@ def post_login():
 
 @app.route('/signup', methods=['POST'])
 def post_signup():
-    print('hi')
     try:
         Core.Check.check_signup_request(request.form)
         registered_user = Linker().register_user(request.form['username'], request.form['password'], request.form['email'])
