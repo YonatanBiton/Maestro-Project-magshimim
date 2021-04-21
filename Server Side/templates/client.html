@@ -12,7 +12,7 @@
     crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+  <link rel="shortcut icon" type="image/x-icon" href="static/OnlyMeastro.png" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <script
     src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
@@ -49,7 +49,7 @@
       border: 1px solid black;
       padding: 50px;
       margin: 20px;
-      height: 600px;
+      height: 650px;
     }
 
     .showFiles {
@@ -160,7 +160,9 @@
       var output = document.getElementById("fileList");
       var children = "";
       for (var i = 0; i < input.files.length; ++i) {
-        children += "<li>" + input.files.item(i).name + "</li>";
+
+        children += "<li>" + input.files.item(i).name + "<label style='margin-left:150px;'>" + "<button type='button' class='btn btn-danger' >DeleteFile</button>" + "</label>" + "</li>";
+
       }
       output.innerHTML += children;
     };
@@ -194,8 +196,8 @@
 
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <!-- Brand/logo -->
-    <a class="navbar-brand" href="#">
-      <img src="/static/maestro.png" alt="logo" style="height:50px; width: 30px;">
+    <a class="navbar-brand" href="home">
+      <img src="static/OnlyMeastro.png" alt="logo" style="height:50px; width: 30px;">
     </a>
 
     <!-- Links -->
@@ -243,16 +245,20 @@
         </form>
 
       </div>
+
     </div>
 
+    <label style="margin-left: 270px;">{{CurrentSongName}}</label>
     <div style="margin-left: 140px; margin-bottom: 50px;">
+
       <form action="/prev" method="POST" style="display: inline;">
         <button style="margin-right: 30px;" type="submit" class="btn btn-success btn-arrow-left">Prev</button>
       </form>
-      <label> {{CorrentFile}} out of {{FilesInLab}} </label>
+      <label> {{CurrentFile}} out of {{FilesInLab}} </label>
       <form action="/next" method="POST" style="display: inline;">
         <button style="margin-left: 30px;" type="submit" class="btn btn-success btn-arrow-right">Next</button>
       </form>
+
     </div>
 
 
@@ -266,6 +272,7 @@
       </midi-player>
     </div>
   </div>
+
   <!-- advanced options -->
   <div>
     <form action="/learn" method="POST">
