@@ -27,6 +27,7 @@
     /* Link to your background image using in the property below! */
     background: scroll center url('maestro.png');
     background-size: contain;
+    
   }
   
   .card-signin .card-body {
