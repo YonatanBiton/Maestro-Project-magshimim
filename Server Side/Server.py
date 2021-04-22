@@ -20,13 +20,16 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def get_index():
     try:
         logged_user = User(session)
-        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}/learning/polyphony_rnn/generated'
         midi_load = ""
-        midi_files = glob.glob(f"{folder_path}/*.mid")
-        current_file =  session['midi_index'] + 1 if 'midi_index' in session and len(midi_files) > 0 else 0
-        current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
-        for file in midi_files:
-                midi_load += f"<li>{ntpath.basename(file)}</li>"
+        current_file = 0
+        current_song_name = ""
+        if os.path.isdir(folder_path):
+            midi_files = glob.glob(f"{folder_path}/*.mid")
+            current_file = session['midi_index'] + 1 if 'midi_index' in session and len(midi_files) > 0 else 0
+            current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
+            for file in midi_files:
+                    midi_load += f"<li>{ntpath.basename(file)}</li>"
         template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}', CurrentSongName=current_song_name, CurrentFile=current_file, FilesInLab=len(midi_files))
         template = template.replace('@MidisLoad', midi_load)
         return template
@@ -64,7 +67,9 @@ def get_midi_files(folder_name):
         midi_file_content = ""
         logged_user = User(session)
         if logged_user.name == folder_name:
-            folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{folder_name}'
+            folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{folder_name}/learning/polyphony_rnn/generated'
+            if not os.path.isdir(folder_path):
+                return midi_file_content
             midi_files = glob.glob(f"{folder_path}/*.mid")
             if 'midi_index' not in session or session['midi_index'] >= len(midi_files):
                 return midi_file_content
@@ -135,10 +140,13 @@ def post_learn():
 def post_next():
     try:
         logged_user = User(session)
-        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
-        midi_files = glob.glob(f"{folder_path}/*.mid")
-        if 'midi_index' in session and len(midi_files) > 0:
-            session['midi_index'] = session['midi_index'] + 1 if session['midi_index'] < len(midi_files) - 1 else 0
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}/learning/polyphony_rnn/generated'
+        if os.path.isdir(folder_path):
+            midi_files = glob.glob(f"{folder_path}/*.mid")
+            if 'midi_index' in session and len(midi_files) > 0:
+                session['midi_index'] = session['midi_index'] + 1 if session['midi_index'] < len(midi_files) - 1 else 0
+            else:
+                session['midi_index'] = 0
         else:
             session['midi_index'] = 0
         return redirect('/')
@@ -150,10 +158,13 @@ def post_next():
 def post_prev():
     try:
         logged_user = User(session)
-        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
-        midi_files = glob.glob(f"{folder_path}/*.mid")
-        if 'midi_index' in session and len(midi_files) > 0:
-            session['midi_index'] = session['midi_index'] - 1 if session['midi_index'] > 0 else len(midi_files) - 1
+        folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}/learning/polyphony_rnn/generated'
+        if os.path.isdir(folder_path):
+            midi_files = glob.glob(f"{folder_path}/*.mid")
+            if 'midi_index' in session and len(midi_files) > 0:
+                session['midi_index'] = session['midi_index'] - 1 if session['midi_index'] > 0 else len(midi_files) - 1
+            else:
+                session['midi_index'] = 0
         else:
             session['midi_index'] = 0
         return redirect('/')
