@@ -21,15 +21,17 @@ def get_index():
     try:
         logged_user = User(session)
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}/learning/polyphony_rnn/generated'
+        midis_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_load = ""
         current_file = 0
         current_song_name = ""
+        midis_load_files = glob.glob(f"{midis_path}/*.mid")
+        midi_files = glob.glob(f"{folder_path}/*.mid")
         if os.path.isdir(folder_path):
-            midi_files = glob.glob(f"{folder_path}/*.mid")
             current_file = session['midi_index'] + 1 if 'midi_index' in session and len(midi_files) > 0 else 0
             current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
-            for file in midi_files:
-                    midi_load += f"<li>{ntpath.basename(file)}</li>"
+        for file in midis_load_files:
+                midi_load += f"<li>{ntpath.basename(file)}</li>"
         template = render_template('client.html', MidiLinkPaste=f'http://127.0.0.1:5000/Dataset/{logged_user.name}', CurrentSongName=current_song_name, CurrentFile=current_file, FilesInLab=len(midi_files))
         template = template.replace('@MidisLoad', midi_load)
         return template
