@@ -23,7 +23,7 @@ def get_index():
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_load = ""
         midi_files = glob.glob(f"{folder_path}/*.mid")
-        current_file =  session['midi_index'] + 1 if 'midi_index' in session else 0
+        current_file =  session['midi_index'] + 1 if 'midi_index' in session and len(midi_files) > 0 else 0
         current_song_name = ntpath.basename(midi_files[session['midi_index']]) if 'midi_index' in session and session['midi_index'] < len(midi_files) else ""
         for file in midi_files:
                 midi_load += f"<li>{ntpath.basename(file)}</li>"
@@ -137,7 +137,7 @@ def post_next():
         logged_user = User(session)
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_files = glob.glob(f"{folder_path}/*.mid")
-        if 'midi_index' in session:
+        if 'midi_index' in session and len(midi_files) > 0:
             session['midi_index'] = session['midi_index'] + 1 if session['midi_index'] < len(midi_files) - 1 else 0
         else:
             session['midi_index'] = 0
@@ -152,7 +152,7 @@ def post_prev():
         logged_user = User(session)
         folder_path = f'{os.getcwd()}/Server Side/{Config.UPLOAD_FOLDER}{logged_user.name}'
         midi_files = glob.glob(f"{folder_path}/*.mid")
-        if 'midi_index' in session:
+        if 'midi_index' in session and len(midi_files) > 0:
             session['midi_index'] = session['midi_index'] - 1 if session['midi_index'] > 0 else len(midi_files) - 1
         else:
             session['midi_index'] = 0
